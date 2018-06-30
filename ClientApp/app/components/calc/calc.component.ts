@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class CalcComponent {
     public expression = "null";
     public eval = 0;
-    public history: History[] = [];
+    public history: History[];
 
     public http: Http;
     public baseUrl: string;
@@ -18,15 +18,10 @@ export class CalcComponent {
     public displayOperators = false;
     public displayEval = false;
     public displayHistory = false;
-    private evalHistory: BehaviorSubject<History[]> = new BehaviorSubject<History[]>([]);
-
+    
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
         this.http = http;
         this.baseUrl = baseUrl;
-
-        this.getEvalHistory().subscribe((values: History[]) => {
-            //this.history = values;
-        });
     }
 
     public pressDigit(digit: string) {
@@ -50,9 +45,9 @@ export class CalcComponent {
 
     public pressEval() {
         this.http.get(this.baseUrl + 'api/Calc/Eval?expression=' + encodeURIComponent(this.expression)).subscribe(result => {
-            this.eval = result.json() as number;
-            //this.getHistory();
-            this.addToHistory();
+            let vm = result.json() as ViewModel;
+            this.eval = vm.result;
+            this.history = vm.history;
         }, error => console.error(error));
     }
 
@@ -65,23 +60,11 @@ export class CalcComponent {
             this.history = result.json() as History[];
         }, error => console.error(error));
     }
+}
 
-    private addToHistory(): void {
-        const newHistory: History = { expression: this.expression, result: this.eval };
-        const allHistory: History[] = this.evalHistory.getValue();
-        allHistory.push(newHistory);
-        this.setEvalHistory(allHistory);
-
-        this.history.push(newHistory);
-    }
-
-    private setEvalHistory(values: History[]): void {
-        this.evalHistory.next(values);
-    }
-
-    private getEvalHistory(): Observable<History[]> {
-        return this.evalHistory.asObservable();
-    }
+interface ViewModel {
+    result: number;
+    history: History[];
 }
 
 interface History {

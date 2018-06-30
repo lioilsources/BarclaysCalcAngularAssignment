@@ -9,22 +9,39 @@ namespace Calc.Controllers
     [Route("api/[controller]")]
     public class CalcController : Controller
     {
-        static readonly List<(string expression, int result)> history = new List<(string expression, int result)>();
+        static readonly List<History> history = new List<History>();
 
         [HttpGet("[action]")]
-        public int Eval(string expression)
+        public ViewModel Eval(string expression)
         {
             var res = expression.Split("+").Select(s => ResolveMultiply(s)).Sum(i => i);
-            history.Add((expression, res));
-            return res;
+            history.Add(new History
+            {
+                Expression = expression,
+                Result = res
+            });
+            return new ViewModel
+            {
+                Result = res,
+                History = history.ToArray()
+            };
         }
 
         int ResolveMultiply(string expression)
         {
 	        return expression.Split("*").Select(s => Int32.Parse(s)).Aggregate((a, b) => a * b);
         }
+    }
 
-        [HttpGet("[action]")]
-        public List<(string expression, int result)> ListHistory() => history;
+    public class ViewModel
+    {
+        public int Result { get; set; }
+        public History[] History { get; set; }
+    }
+
+    public class History
+    {
+        public string Expression { get; set; }
+        public int Result { get; set; }
     }
 }
