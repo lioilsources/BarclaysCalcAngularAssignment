@@ -1,0 +1,67 @@
+/* https://websemantics.uk/articles/shiny-buttons/ */
+
+.button.gray {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #CCC;
+}
+
+.button.light {
+    background-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.button.black {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #CCC;
+}
+
+.button {
+    border: 10px solid white;
+    border-radius: 20px;
+    padding: 20px 20px;
+    font-size: x-large;
+}
+
+.button:hover,
+.button:focus {
+    text-decoration: none;
+}
+
+.button:active {
+}
+
+.button::before {
+}
+
+.button:active::before {
+    opacity: 0;
+}
+
+.button:hover::before {
+    left: 45%;
+}
+
+.panel {
+    margin: 0;
+}
+.panel .display .label {
+    float: left;
+    font-size: small;
+    color: #EEE;
+}
+
+.panel .display {
+    text-align: right;
+    font-size: xx-large;
+    background: #434343 none repeat scroll 0% 0%;
+    padding: 0.618rem 1.618rem;
+    color: #AAA;
+    border-radius: 10px;
+    margin: 5px 0px;
+}
+
+button.historyButton {
+    float: left;
+    vertical-align: bottom;
+    font-size: small;
+}

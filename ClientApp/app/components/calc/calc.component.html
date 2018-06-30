@@ -1,0 +1,62 @@
+<div class="row">
+<div class="panel col-xs-12">    
+    
+    <div class="display">
+        <div><span class="label">Expression</span></div>
+        <div><button (click)="showHistory()" class="historyButton">H</button></div>
+        {{ expression }}
+    </div>
+</div>
+</div>
+
+<div class="row">
+<div class="panel col-xs-12">
+    <div class="display"><span class="label">Eval</span>{{ eval }}</div>
+</div>
+</div>
+
+<div class='row'>
+   
+<button (click)="pressDigit('1')" *ngIf="displayDigits" class="button light col-xs-4">1</button>
+<button (click)="pressDigit('2')" *ngIf="displayDigits" class="button light col-xs-4">2</button>
+<button (click)="pressDigit('3')" *ngIf="displayDigits" class="button light col-xs-4">3</button>
+       
+</div>
+<div class='row'>
+    
+<button (click)="pressDigit('4')" *ngIf="displayDigits" class="button light col-xs-4">4</button>
+<button (click)="pressDigit('5')" *ngIf="displayDigits" class="button light col-xs-4">5</button>
+<button (click)="pressDigit('6')" *ngIf="displayDigits" class="button light col-xs-4">6</button>
+       
+</div>
+<div class='row'>
+    
+<button (click)="pressDigit('7')" *ngIf="displayDigits" class="button light col-xs-4">7</button>
+<button (click)="pressDigit('8')" *ngIf="displayDigits" class="button light col-xs-4">8</button>
+<button (click)="pressDigit('9')" *ngIf="displayDigits" class="button light col-xs-4">9</button>
+       
+</div>
+
+<div class="row">
+<button (click)="pressOperator('+')" *ngIf="displayOperators" class="button gray col-xs-4">+</button>
+<button (click)="pressOperator('*')" *ngIf="displayOperators" class="button gray col-xs-4">*</button>
+
+<button (click)="pressEval()" *ngIf="displayEval" class="button black col-xs-4">=</button>
+</div>
+
+<table class='table' *ngIf="displayHistory">
+    <thead>
+        <tr>
+            <th>Expression</th>
+            <th></th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let h of history">
+            <td>{{ h.expression }}</td>
+            <td>=</td>
+            <td>{{ h.result }}</td>
+        </tr>
+    </tbody>
+</table>
