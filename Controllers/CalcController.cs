@@ -15,6 +15,17 @@ namespace Calc.Controllers
         [HttpGet("[action]")]
         public ViewModel Eval(string expression)
         {
+            var syntaxErrorPosition = new ExpressionValidator(expression).Validate();
+            if (syntaxErrorPosition > 0)
+            {
+                return new ViewModel
+                {
+                    Result = -1,
+                    History = history.ToArray(),
+                    SyntaxErrorPosition = syntaxErrorPosition
+                };
+            }
+
             var res = ResolveExpression(ResolveBrackets(expression));
             history.Add(new History
             {
@@ -24,7 +35,8 @@ namespace Calc.Controllers
             return new ViewModel
             {
                 Result = res,
-                History = history.ToArray()
+                History = history.ToArray(),
+                SyntaxErrorPosition = -1
             };
         }
 
@@ -45,6 +57,7 @@ namespace Calc.Controllers
     {
         public int Result { get; set; }
         public History[] History { get; set; }
+        public int SyntaxErrorPosition { get; set; }
     }
 
     public class History
@@ -52,4 +65,64 @@ namespace Calc.Controllers
         public string Expression { get; set; }
         public int Result { get; set; }
     }
+
+    public class ExpressionValidator
+    {
+	    readonly String expression;
+	    int position = 0;
+	    bool insideBracket = false;
+	
+	    public ExpressionValidator(string expression)
+	    {
+		    this.expression = expression;
+	    }
+	
+	    public int Validate()
+	    {
+		    var e = expression[0].ToString();
+		    if (!(isDigit(e) || e == "("))
+		    {
+			    return 0;
+		    }
+		    if (e == "(")
+			    insideBracket = true;
+		
+		    while (position < expression.Length - 1)
+		    {
+			    var term = expression[position].ToString();
+			    var nextTerm = expression[position + 1].ToString();
+			    if (isDigit(term))
+			    {
+				    if (!isOperator(nextTerm) && (insideBracket && !isRightBracket(nextTerm)))
+					    return position + 1;
+			    }
+			    if (isLeftBracket(term))
+			    {
+				    if (!isDigit(nextTerm))
+					    return position + 1;
+				    insideBracket = true;
+			    }
+			    if (isOperator(term))
+			    {
+				    if (!isDigit(nextTerm) && (!insideBracket && !isLeftBracket(nextTerm)))
+					    return position + 1;
+			    }
+			    if (isRightBracket(term))
+			    {
+				    if (!isOperator(nextTerm))
+					    return position + 1;
+				    insideBracket = false;
+			    }
+			    position++;
+		    }
+		
+		    return -1;
+	    }
+	
+	    bool isDigit(string e) => Regex.Match(e, @"\d").Success;
+	    bool isOperator(string e) => e == "+" || e == "*";
+	    bool isLeftBracket(string e) => e == "(";
+	    bool isRightBracket(string e) => e == ")";
+}
+
 }

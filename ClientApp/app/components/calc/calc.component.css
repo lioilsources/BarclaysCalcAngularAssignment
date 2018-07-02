@@ -1,3 +1,7 @@
+.syntaxError {
+    border-bottom: 5px dotted red;
+}
+
 .button.light {
     background-color: #4ABDAC;
     color: #EEE;

@@ -8,9 +8,10 @@ import { Http, URLSearchParams, RequestOptions } from '@angular/http';
 })
 
 export class CalcComponent {
-    public expression = "null";
+    public expression = "2++3*4+";
     public eval = 0;
     public history: History[];
+    public syntaxError = "";
 
     public http: Http;
     public baseUrl: string;
@@ -21,6 +22,7 @@ export class CalcComponent {
     public displayHistory = false;
     public displayLeftBracket = true;
     public displayRightBracket = false;
+    public displayError = false;
 
     public insideBracket = false;
     
@@ -83,8 +85,20 @@ export class CalcComponent {
     public pressEval(): void {
         this.http.get(this.baseUrl + 'api/Calc/Eval?expression=' + encodeURIComponent(this.expression)).subscribe(result => {
             let vm = result.json() as ViewModel;
-            this.eval = vm.result;
+            let res = vm.result;
+            if (res < 0)
+                this.displayError = true;
+            else
+                this.displayError = false;
+            this.eval = res;
             this.history = vm.history;
+
+            let syntaxErrorPosition = vm.syntaxErrorPosition;
+            if (syntaxErrorPosition > 0) {
+                this.syntaxError = this.expression.substring(syntaxErrorPosition);
+                this.expression = this.expression.substring(0, syntaxErrorPosition);
+            }
+
         }, error => console.error(error));
     }
 
@@ -96,6 +110,7 @@ export class CalcComponent {
 interface ViewModel {
     result: number;
     history: History[];
+    syntaxErrorPosition: number;
 }
 
 interface History {

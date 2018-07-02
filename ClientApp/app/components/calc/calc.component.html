@@ -3,14 +3,18 @@
     <div class="display">
         <div><span class="label">Expression</span></div>
         <div><button (click)="showHistory()" class="historyButton">H</button></div>
-        {{ expression }}
+        {{ expression }}<span class="syntaxError">{{ syntaxError }}</span>
     </div>
 </div>
 </div>
 
 <div class="row">
 <div class="col-xs-12">
-    <div class="display"><span class="label">Eval</span>{{ eval }}</div>
+    <div class="display">
+        <span class="label">Eval</span>
+        <span *ngIf="!displayError">{{ eval }}</span>
+        <span *ngIf="displayError">Error</span>
+    </div>
 </div>
 </div>
 
