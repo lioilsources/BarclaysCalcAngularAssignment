@@ -126,8 +126,7 @@ export class CalcComponent {
 
         this.insideBracket = false;
 
-        //let terms: string = "0123456789*+()";
-        let terms: string = "(";
+        let terms: string = "0123456789*+()";
         let randomIndex = this.getRandomInt(0, terms.length - 1);
         this.pressBase(terms[randomIndex]);
     }

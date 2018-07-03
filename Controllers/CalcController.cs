@@ -91,10 +91,11 @@ namespace Calc.Controllers
 
         public int Validate()
         {
-            var e = expression[0].ToString();
-            if (IsOperator(e) || IsRightBracket(e))
+            var firstLetter = expression[0].ToString();
+            if (IsOperator(firstLetter) || IsRightBracket(firstLetter))
                 return 0;
-		    if (e == "(")
+ 
+		    if (firstLetter == "(")
 			    insideBracket = true;
 		
 		    while (position < expression.Length - 1)
@@ -130,6 +131,10 @@ namespace Calc.Controllers
 		
             if (insideBracket && expression[position] != ')')
                 return expression.LastIndexOf('(');
+
+            var lastLetter = expression[position].ToString();
+            if (IsOperator(lastLetter) || IsLeftBracket(lastLetter))
+                return position;
 
             return -1;
 	    }
