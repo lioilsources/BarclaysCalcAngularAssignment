@@ -7,12 +7,12 @@
     color: #EEE;
 }
 
-.button.gray {
-    background-color: #FC4A1A;
+.button.medium {
+    background-color: #F78733;
     color: #EEE;
 }
 
-.button.black {
+.button.dark {
     background-color: #FC4A1A;
     color: #EEE;
 }
@@ -29,7 +29,7 @@
     text-decoration: none;
 }
 
-.display .label {
+.label {
     float: left;
     font-size: small;
     color: #EEE;
@@ -45,7 +45,7 @@
     margin: 5px 0px;
 }
 
-button.historyButton {
+.historyButton {
     float: left;
     vertical-align: bottom;
     font-size: small;

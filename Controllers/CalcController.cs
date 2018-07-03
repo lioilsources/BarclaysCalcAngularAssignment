@@ -16,7 +16,7 @@ namespace Calc.Controllers
         public ViewModel Eval(string expression)
         {
             var syntaxErrorPosition = new ExpressionValidator(expression).Validate();
-            if (syntaxErrorPosition > 0)
+            if (syntaxErrorPosition >= 0)
             {
                 return new ViewModel
                 {
@@ -80,10 +80,8 @@ namespace Calc.Controllers
 	    public int Validate()
 	    {
 		    var e = expression[0].ToString();
-		    if (!(isDigit(e) || e == "("))
-		    {
-			    return 0;
-		    }
+		    if (!(isDigit(e) || (e == "(" && expression.Length == 1)))
+                return 0;
 		    if (e == "(")
 			    insideBracket = true;
 		
@@ -93,7 +91,7 @@ namespace Calc.Controllers
 			    var nextTerm = expression[position + 1].ToString();
 			    if (isDigit(term))
 			    {
-				    if (!isOperator(nextTerm) && (insideBracket && !isRightBracket(nextTerm)))
+				    if ((!insideBracket && !isOperator(nextTerm)) || (insideBracket && !isOperator(nextTerm) && !isRightBracket(nextTerm)))
 					    return position + 1;
 			    }
 			    if (isLeftBracket(term))
@@ -104,19 +102,22 @@ namespace Calc.Controllers
 			    }
 			    if (isOperator(term))
 			    {
-				    if (!isDigit(nextTerm) && (!insideBracket && !isLeftBracket(nextTerm)))
+				    if ((insideBracket && !isDigit(nextTerm)) || (!insideBracket && !isDigit(nextTerm) && !isLeftBracket(nextTerm)))
 					    return position + 1;
 			    }
 			    if (isRightBracket(term))
 			    {
 				    if (!isOperator(nextTerm))
 					    return position + 1;
-				    insideBracket = false;
+                    insideBracket = false;
 			    }
 			    position++;
 		    }
 		
-		    return -1;
+            if (insideBracket && expression[position] != ')')
+                return expression.LastIndexOf('(');
+
+            return -1;
 	    }
 	
 	    bool isDigit(string e) => Regex.Match(e, @"\d").Success;
