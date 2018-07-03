@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Http, URLSearchParams, RequestOptions } from '@angular/http';
 
+
 @Component({
     selector: 'calc',
     templateUrl: './calc.component.html',
@@ -8,27 +9,45 @@ import { Http, URLSearchParams, RequestOptions } from '@angular/http';
 })
 
 export class CalcComponent {
-    public expression = "null";
-    public eval = 0;
-    public history: History[];
-    public syntaxError = "";
+    public expression: string;
+    public eval: number | null;
+    public syntaxError: string;
+
+    public history: History[] = [];
 
     public http: Http;
     public baseUrl: string;
 
-    public displayDigits = true;
-    public displayOperators = false;
-    public displayEval = false;
-    public displayHistory = false;
-    public displayLeftBracket = true;
-    public displayRightBracket = false;
-    public displayError = false;
+    public displayDigits: boolean;
+    public displayOperators: boolean;
+    public displayEval: boolean;
+    public displayHistory: boolean;
+    public displayLeftBracket: boolean;
+    public displayRightBracket: boolean;
+    public displayError: boolean;
 
-    public insideBracket = false;
+    public insideBracket: boolean;
     
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
         this.http = http;
         this.baseUrl = baseUrl;
+        this.initView();
+    }
+
+    public initView(): void {
+        this.expression = "null";
+        this.eval = 0;
+        this.syntaxError = "";
+
+        this.displayDigits = true;
+        this.displayOperators = false;
+        this.displayEval = false;
+        this.displayHistory = false;
+        this.displayLeftBracket = true;
+        this.displayRightBracket = false;
+        this.displayError = false;
+
+        this.insideBracket = false;
     }
 
     public pressBase(input: string): void {
@@ -85,17 +104,7 @@ export class CalcComponent {
     }
 
     public pressClear(): void {
-        this.expression = "null";
-        this.syntaxError = "";
-        this.eval = 0;
-
-        this.displayDigits = true;
-        this.displayOperators = false;
-        this.displayEval = false;
-        this.displayHistory = false;
-        this.displayLeftBracket = true;
-        this.displayRightBracket = false;
-        this.displayError = false;
+        this.initView();
     }
 
     /**
@@ -110,28 +119,35 @@ export class CalcComponent {
 
     public pressError(): void {
         this.displayEval = true;
+        this.displayDigits = true;
+        this.displayOperators = true;
+        this.displayLeftBracket = true;
+        this.displayRightBracket = true;
 
-        let terms: string = "0123456789*+()";
+        this.insideBracket = false;
+
+        //let terms: string = "0123456789*+()";
+        let terms: string = "(";
         let randomIndex = this.getRandomInt(0, terms.length - 1);
         this.pressBase(terms[randomIndex]);
     }
     public pressEval(): void {
+        this.expression += this.syntaxError;
+        this.syntaxError = "";
         this.http.get(this.baseUrl + 'api/Calc/Eval?expression=' + encodeURIComponent(this.expression)).subscribe(result => {
             let vm = result.json() as ViewModel;
-            let res = vm.result;
-            if (res <= 0)
-                this.displayError = true;
-            else
-                this.displayError = false;
-            this.eval = res;
-            this.history = vm.history;
+            this.displayError = vm.eval == null && vm.syntaxErrorPosition != null;
+            this.eval = vm.eval;
 
+            let lastHistory = vm.lastHistory;
+            if (lastHistory != null)
+                this.history.push(lastHistory);
+            
             let syntaxErrorPosition = vm.syntaxErrorPosition;
-            if (syntaxErrorPosition >= 0) {
+            if (syntaxErrorPosition != null) {
                 this.syntaxError = this.expression.substring(syntaxErrorPosition);
                 this.expression = this.expression.substring(0, syntaxErrorPosition);
             }
-
         }, error => console.error(error));
     }
 
@@ -141,12 +157,12 @@ export class CalcComponent {
 }
 
 interface ViewModel {
-    result: number;
-    history: History[];
-    syntaxErrorPosition: number;
+    eval: number | null;
+    lastHistory: History;
+    syntaxErrorPosition: number | null;
 }
 
 interface History {
     expression: string;
-    result: number;
+    eval: number;
 }
