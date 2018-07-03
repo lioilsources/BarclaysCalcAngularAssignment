@@ -18,15 +18,8 @@ export class CalcComponent {
     public http: Http;
     public baseUrl: string;
 
-    public displayDigits: boolean;
-    public displayOperators: boolean;
-    public displayEval: boolean;
     public displayHistory: boolean;
-    public displayLeftBracket: boolean;
-    public displayRightBracket: boolean;
     public displayError: boolean;
-
-    public insideBracket: boolean;
     
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
         this.http = http;
@@ -39,15 +32,8 @@ export class CalcComponent {
         this.eval = 0;
         this.syntaxError = "";
 
-        this.displayDigits = true;
-        this.displayOperators = false;
-        this.displayEval = false;
         this.displayHistory = false;
-        this.displayLeftBracket = true;
-        this.displayRightBracket = false;
         this.displayError = false;
-
-        this.insideBracket = false;
     }
 
     public pressBase(input: string): void {
@@ -60,76 +46,25 @@ export class CalcComponent {
     }
 
     public pressDigit(digit: string): void {
-        this.pressBase(digit);
-        
-        this.displayDigits = false;
-        this.displayOperators = true;
-        this.displayEval = true;
-
-        if (this.insideBracket)
-            this.displayRightBracket = true;
-        else
-            this.displayLeftBracket = false;
+        this.pressBase(digit);        
     }
 
     public pressOperator(operator: string): void {
         this.pressBase(operator);
-
-        this.displayDigits = true;
-        this.displayOperators = false;
-        this.displayEval = false;
-
-        if (this.insideBracket) 
-            this.displayRightBracket = false;
-        else
-            this.displayLeftBracket = true;
     }
 
     public pressLeftBracket(): void {
         this.pressBase('(');
-
-        this.displayLeftBracket = false;
-        this.displayRightBracket = false;
-
-        this.insideBracket = true;
     }
 
     public pressRightBracket(): void {
         this.pressBase(')');
-
-        this.displayRightBracket = false;
-        this.displayLeftBracket = false;
-
-        this.insideBracket = false;
     }
 
     public pressClear(): void {
         this.initView();
     }
 
-    /**
-     * Returns a random integer between min (inclusive) and max (inclusive)
-     * Using Math.round() will give you a non-uniform distribution!
-     * 
-     * source: https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-     */
-    private getRandomInt(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    public pressError(): void {
-        this.displayEval = true;
-        this.displayDigits = true;
-        this.displayOperators = true;
-        this.displayLeftBracket = true;
-        this.displayRightBracket = true;
-
-        this.insideBracket = false;
-
-        let terms: string = "0123456789*+()";
-        let randomIndex = this.getRandomInt(0, terms.length - 1);
-        this.pressBase(terms[randomIndex]);
-    }
     public pressEval(): void {
         this.expression += this.syntaxError;
         this.syntaxError = "";

@@ -19,38 +19,32 @@
 </div>
 
 <div class='row'>
-<button (click)="pressDigit('1')" *ngIf="displayDigits" class="button light col-xs-4">1</button>
-<button (click)="pressDigit('2')" *ngIf="displayDigits" class="button light col-xs-4">2</button>
-<button (click)="pressDigit('3')" *ngIf="displayDigits" class="button light col-xs-4">3</button>
+<button (click)="pressDigit('1')" class="button light col-xs-4">1</button>
+<button (click)="pressDigit('2')" class="button light col-xs-4">2</button>
+<button (click)="pressDigit('3')" class="button light col-xs-4">3</button>
 </div>
 <div class='row'>  
-<button (click)="pressDigit('4')" *ngIf="displayDigits" class="button light col-xs-4">4</button>
-<button (click)="pressDigit('5')" *ngIf="displayDigits" class="button light col-xs-4">5</button>
-<button (click)="pressDigit('6')" *ngIf="displayDigits" class="button light col-xs-4">6</button>    
+<button (click)="pressDigit('4')" class="button light col-xs-4">4</button>
+<button (click)="pressDigit('5')" class="button light col-xs-4">5</button>
+<button (click)="pressDigit('6')" class="button light col-xs-4">6</button>    
 </div>
 <div class='row'>
-<button (click)="pressDigit('7')" *ngIf="displayDigits" class="button light col-xs-4">7</button>
-<button (click)="pressDigit('8')" *ngIf="displayDigits" class="button light col-xs-4">8</button>
-<button (click)="pressDigit('9')" *ngIf="displayDigits" class="button light col-xs-4">9</button>
+<button (click)="pressDigit('7')" class="button light col-xs-4">7</button>
+<button (click)="pressDigit('8')" class="button light col-xs-4">8</button>
+<button (click)="pressDigit('9')" class="button light col-xs-4">9</button>
 </div>
 
 <div class="row">
-<button (click)="pressOperator('+')" *ngIf="displayOperators" class="button dark col-xs-4">+</button>
-<button (click)="pressOperator('*')" *ngIf="displayOperators" class="button dark col-xs-4">*</button>
+<button (click)="pressOperator('+')" class="button dark col-xs-4">+</button>
+<button (click)="pressOperator('*')" class="button dark col-xs-4">*</button>
 
-<button (click)="pressEval()" *ngIf="displayEval" class="button dark col-xs-4">=</button>
+<button (click)="pressEval()" class="button dark col-xs-4">=</button>
 </div>
 
 <div class="row">
-<button (click)="pressLeftBracket()" *ngIf="displayLeftBracket" class="button dark col-xs-4">(</button>
-<button (click)="pressRightBracket()" *ngIf="displayRightBracket" class="button dark col-xs-4">)</button>
-
-</div>
-
-<div class="row">
-<button (click)="pressError()" class="button medium col-xs-4">Error</button>
+<button (click)="pressLeftBracket()" class="button dark col-xs-4">(</button>
+<button (click)="pressRightBracket()" class="button dark col-xs-4">)</button>
 <button (click)="pressClear()" class="button medium col-xs-4">C</button>
-
 </div>
 
 <div class="row">
